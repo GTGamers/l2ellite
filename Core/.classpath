@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="authserver/src"/>
+	<classpathentry kind="src" path="commons/src"/>
+	<classpathentry excluding="ru/eanseen/extensions/impl/mods/communityboard/impl/" kind="src" path="gameserver/src"/>
+	<classpathentry kind="src" path="gameserver/src/ru/eanseen/extensions/impl/mods/communityboard/impl"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

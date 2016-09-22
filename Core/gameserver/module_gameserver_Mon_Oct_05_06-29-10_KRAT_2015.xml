@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_gameserver" default="compile.module.gameserver">
+  <dirname property="module.gameserver.basedir" file="${ant.file.module_gameserver}"/>
+  
+  <property name="module.jdk.home.gameserver" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.gameserver" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.gameserver" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.gameserver" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+  
+  <property name="gameserver.output.dir" value="${module.gameserver.basedir}/../../out/production/gameserver"/>
+  <property name="gameserver.testoutput.dir" value="${module.gameserver.basedir}/../../out/test/gameserver"/>
+  
+  <path id="gameserver.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="gameserver.module.production.classpath">
+    <path refid="${module.jdk.classpath.gameserver}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  <path id="gameserver.runtime.production.module.classpath">
+    <pathelement location="${gameserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  <path id="gameserver.module.classpath">
+    <path refid="${module.jdk.classpath.gameserver}"/>
+    <pathelement location="${gameserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.testoutput.dir}"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  <path id="gameserver.runtime.module.classpath">
+    <pathelement location="${gameserver.testoutput.dir}"/>
+    <pathelement location="${gameserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.testoutput.dir}"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.gameserver">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.gameserver">
+    <patternset refid="excluded.from.module.gameserver"/>
+  </patternset>
+  
+  <path id="gameserver.module.sourcepath">
+    <dirset dir="${module.gameserver.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.gameserver" depends="compile.module.gameserver.production,compile.module.gameserver.tests" description="Compile module gameserver"/>
+  
+  <target name="compile.module.gameserver.production" depends="compile.module.commons" description="Compile module gameserver; production classes">
+    <mkdir dir="${gameserver.output.dir}"/>
+    <javac destdir="${gameserver.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.gameserver}/javac">
+      <compilerarg line="${compiler.args.gameserver}"/>
+      <bootclasspath refid="gameserver.module.bootclasspath"/>
+      <classpath refid="gameserver.module.production.classpath"/>
+      <src refid="gameserver.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.gameserver"/>
+    </javac>
+    
+    <copy todir="${gameserver.output.dir}">
+      <fileset dir="${module.gameserver.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.gameserver.tests" depends="compile.module.gameserver.production" description="compile module gameserver; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.gameserver" description="cleanup module">
+    <delete dir="${gameserver.output.dir}"/>
+    <delete dir="${gameserver.testoutput.dir}"/>
+  </target>
+</project>

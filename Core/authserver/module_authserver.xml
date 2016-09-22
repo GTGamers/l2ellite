@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_authserver" default="compile.module.authserver">
+  <dirname property="module.authserver.basedir" file="${ant.file.module_authserver}"/>
+  
+  <property name="module.jdk.home.authserver" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.authserver" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.authserver" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.authserver" value="-encoding windows-1251 -source 8 ${compiler.args}"/>
+  
+  <property name="authserver.output.dir" value="${module.authserver.basedir}/../../out/production/authserver"/>
+  <property name="authserver.testoutput.dir" value="${module.authserver.basedir}/../../out/test/authserver"/>
+  
+  <path id="authserver.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="authserver.module.production.classpath">
+    <path refid="${module.jdk.classpath.authserver}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  <path id="authserver.runtime.production.module.classpath">
+    <pathelement location="${authserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="commons.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="authserver.module.classpath">
+    <path refid="${module.jdk.classpath.authserver}"/>
+    <pathelement location="${authserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <pathelement location="${commons.testoutput.dir}"/>
+    <pathelement location="${commons.output.dir}"/>
+  </path>
+  
+  <path id="authserver.runtime.module.classpath">
+    <pathelement location="${authserver.testoutput.dir}"/>
+    <pathelement location="${authserver.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="commons.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.authserver">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.authserver">
+    <patternset refid="excluded.from.module.authserver"/>
+  </patternset>
+  
+  <path id="authserver.module.sourcepath">
+    <dirset dir="${module.authserver.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.authserver" depends="compile.module.authserver.production,compile.module.authserver.tests" description="Compile module authserver"/>
+  
+  <target name="compile.module.authserver.production" depends="compile.module.commons" description="Compile module authserver; production classes">
+    <mkdir dir="${authserver.output.dir}"/>
+    <javac destdir="${authserver.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.authserver}/javac">
+      <compilerarg line="${compiler.args.authserver}"/>
+      <bootclasspath refid="authserver.module.bootclasspath"/>
+      <classpath refid="authserver.module.production.classpath"/>
+      <src refid="authserver.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.authserver"/>
+    </javac>
+    
+    <copy todir="${authserver.output.dir}">
+      <fileset dir="${module.authserver.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.authserver.tests" depends="compile.module.authserver.production" description="compile module authserver; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.authserver" description="cleanup module">
+    <delete dir="${authserver.output.dir}"/>
+    <delete dir="${authserver.testoutput.dir}"/>
+  </target>
+</project>
